@@ -29,6 +29,12 @@ public class Booking {
     @JoinColumn(name = "ticket_id", nullable = false)
     private Ticket ticket;
 
+    @Column(name = "name")
+    private String name;
+
+    @Column(name = "surname")
+    private String surname;
+
     @Column(name = "passport")
     private String passport;
 

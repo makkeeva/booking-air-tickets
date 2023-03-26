@@ -25,12 +25,13 @@ public class Profile {
     @JoinColumn(name = "username", referencedColumnName = "username")
     private User user;
 
-    @Column(name = "email")
-    private String email;
-
     @Column(name = "name")
     private String name;
 
     @Column(name = "surname")
     private String surname;
+
+    @Column(name = "email")
+    private String email;
+
 }

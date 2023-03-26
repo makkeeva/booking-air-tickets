@@ -7,7 +7,7 @@ import lombok.Setter;
 import lombok.experimental.SuperBuilder;
 
 import javax.persistence.*;
-import java.sql.Date;
+import java.sql.Timestamp;
 
 @Getter
 @Setter
@@ -35,8 +35,8 @@ public class Ticket {
     private String airline;
 
     @Column(name = "departure_time")
-    private Date departureTime;
+    private Timestamp departureTime;
 
     @Column(name = "arrival_time")
-    private Date arrivalTime;
+    private Timestamp arrivalTime;
 }
