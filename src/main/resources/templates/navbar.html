@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.w3.org/1999/xhtml" lang="ru">
+
+<body>
+<nav th:fragment="navbar" class="navbar navbar-expand-lg navbar-light bg-light">
+    <a class="navbar-brand" th:href="@{/ticket/all}">Система брониравания билетов</a>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+    </button>
+
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+        <ul class="navbar-nav mr-auto">
+            <li class="nav-item dropdown active">
+                <div sec:authorize="hasAnyAuthority('ADMIN')">
+                    <a class="nav-link dropdown-toggle" id="navbarDropdown" role="button"
+                       data-toggle="dropdown"
+                       aria-haspopup="true" aria-expanded="false"
+                    >
+                        Билеты
+                    </a>
+                    <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                        <a class="btn btn-link" th:href="@{/ticket/all}">Билеты</a>
+                        <a class="btn btn-link" th:href="@{/ticket/add}">Добавить билет</a>
+                    </div>
+                </div>
+                <div sec:authorize="hasAnyAuthority('USER')">
+                    <a class="btn btn-link" th:href="@{/ticket/all}">Билеты</a>
+                </div>
+            </li>
+            <li class="nav-item" sec:authorize="hasAnyAuthority('USER')">
+                <a class="btn btn-link" th:href="@{/ticket/booking/all/user}">Бронирования</a>
+            </li>
+            <li class="nav-item" sec:authorize="hasAnyAuthority('ADMIN')">
+                <a class="btn btn-link" th:href="@{/ticket/booking/all}">Бронирования</a>
+            </li>
+            <li class="nav-item" sec:authorize="hasAnyAuthority('ADMIN')">
+                <a class="btn btn-link" th:href="@{/user/all}">Пользователи</a>
+            </li>
+        </ul>
+        <form th:action="@{/logout}" method="post">
+            <button type="submit" class="btn btn-primary" id="logoutBtn">Выйти из системы</button>
+        </form>
+    </div>
+</nav>
+</body>
+
+</html>
