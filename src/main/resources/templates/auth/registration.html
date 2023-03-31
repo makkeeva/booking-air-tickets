@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="ru" xmlns="http://www.w3.org/1999/html">
+<head>
+    <meta charset="UTF-8">
+    <title>Добавить пользователя</title>
+    <link href="https://fonts.googleapis.com/css?family=Spartan&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+          integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T"
+          crossorigin="anonymous">
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.3.1/css/all.css"
+          integrity="sha384-mzrmE5qonljUremFsqc01SB46JvROS7bZs3IO2EmfFsd15uHvIt+Y8vEf7N7fWAU" crossorigin="anonymous">
+    <link th:href="@{/resources/css/login.css}" rel="stylesheet" type="text/css">
+    <link th:href="@{/resources/css/background.css}" rel="stylesheet" type="text/css">
+    <script type="text/javascript" src="http://code.jquery.com/jquery-1.8.3.js"></script>
+</head>
+<body>
+<div class="card login-form">
+    <div class="card-header">Добавить пользователя</div>
+    <div class="card-body">
+        <form class="my-0 needs-validation" th:action="@{/auth/registration}" method="POST" id="login-form" th:object="${profile}">
+            <div class="form-group">
+                <div class="input-group form-group">
+                    <div class="input-group-prepend">
+                        <span class="input-group-text"><i class="fas fa-user"></i></span>
+                    </div>
+                    <input id="login" type="text" class="form-control" name="login" placeholder="Логин" required
+                           minlength="5" maxlength="50" th:field="${profile.user.username}">
+                </div>
+                <div class="input-group form-group">
+                    <div class="input-group-prepend">
+                        <span class="input-group-text"><i class="fas fa-key"></i></span>
+                    </div>
+                    <input id="password" type="password" class="form-control" name="password" placeholder="Пароль"
+                           required minlength="5" maxlength="255" th:field="${profile.user.password}">
+                </div>
+                <div class="input-group form-group">
+                    <div class="input-group-prepend">
+                        <span class="input-group-text">@</span>
+                    </div>
+                    <input id="email" type="email" class="form-control" name="email" placeholder="E-mail" required
+                           th:field="${profile.email}">
+                </div>
+            </div>
+            <div class="my-0 form-group">
+                <p style="color: red" th:if="${error}" th:text="${error}"></p>
+                <button type="submit" class="btn btn-primary">Добавить пользователя</button>
+            </div>
+        </form>
+    </div>
+    <div class="card-footer">
+        <a type="submit" class="btn btn-link" th:href="@{/auth/login}">Войти</a>
+    </div>
+</div>
+</body>
+</html>
