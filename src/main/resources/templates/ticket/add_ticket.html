@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="ru" xmlns="http://www.w3.org/1999/html">
+<head>
+    <meta charset="UTF-8">
+    <title>Добавить билет</title>
+    <link href="https://fonts.googleapis.com/css?family=Spartan&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+          integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T"
+          crossorigin="anonymous">
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.3.1/css/all.css"
+          integrity="sha384-mzrmE5qonljUremFsqc01SB46JvROS7bZs3IO2EmfFsd15uHvIt+Y8vEf7N7fWAU" crossorigin="anonymous">
+    <script src="http://code.jquery.com/jquery-1.8.3.js"></script>
+    <link th:href="@{/resources/css/background.css}" rel="stylesheet" type="text/css">
+    <link th:href="@{/resources/css/add_ticket.css}" rel="stylesheet" type="text/css">
+</head>
+<body>
+<div th:replace="~{navbar :: navbar}"></div>
+<div class="card add-ticket-form">
+    <div class="card-header">Добавить билет</div>
+    <div class="card-body">
+        <form class="my-0 needs-validation" th:action="@{/ticket/add}" method="post" id="ticket-form">
+            <div class="form-group">
+                <div class="input-group form-group">
+                    <div class="input-group-prepend">
+                        <span class="input-group-text">Место отправления</span>
+                    </div>
+                    <input id="arrivalPoint" type="text" class="form-control" name="arrivalPoint"
+                           placeholder="Место отправления" required
+                           minlength="5" maxlength="50" th:value="${ticket.arrivalPoint}">
+                </div>
+                <div class="input-group form-group">
+                    <div class="input-group-prepend">
+                        <span class="input-group-text">Место прибытия</span>
+                    </div>
+                    <input id="departurePoint" type="text" class="form-control" name="departurePoint"
+                           placeholder="Место прибытия" required
+                           minlength="5" maxlength="50" th:value="${ticket.departurePoint}">
+                </div>
+                <div class="input-group form-group">
+                    <div class="input-group-prepend">
+                        <span class="input-group-text">Цена</span>
+                    </div>
+                    <input id="cost" type="number" class="form-control" name="cost"
+                           placeholder="Цена" min="0" required th:value="${ticket.cost}">
+                </div>
+                <div class="input-group form-group">
+                    <div class="input-group-prepend">
+                        <span class="input-group-text">Перевозчик</span>
+                    </div>
+                    <input id="airline" type="text" class="form-control" name="airline"
+                           placeholder="Перевозчик" required minlength="5" maxlength="50"
+                           th:value="${ticket.airline}">
+                </div>
+                <div class="input-group form-group">
+                    <div class="input-group-prepend">
+                        <span class="input-group-text">Время отправления</span>
+                    </div>
+                    <input id="departureDateStr" type="datetime-local" class="form-control" name="departureDateStr"
+                           placeholder="Время отправления" required th:value="${departureDateStr}">
+                </div>
+                <div class="input-group form-group">
+                    <div class="input-group-prepend">
+                        <span class="input-group-text">Время прибытия</span>
+                    </div>
+                    <input id="arrivalDateStr" type="datetime-local" class="form-control" name="arrivalDateStr"
+                           placeholder="Время прибытия" required th:value="${arrivalDateStr}">
+                </div>
+            </div>
+            <div class="my-0 form-group">
+                <p style="color: red" th:if="${error}" th:text="${error}"></p>
+                <button type="submit" class="btn btn-primary">Добавить билет</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+</body>
+</html>

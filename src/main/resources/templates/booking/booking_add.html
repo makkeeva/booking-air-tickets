@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="ru" xmlns="http://www.w3.org/1999/html">
+<head>
+    <meta charset="UTF-8">
+    <title>Добавить бронирование</title>
+    <link href="https://fonts.googleapis.com/css?family=Spartan&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+          integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T"
+          crossorigin="anonymous">
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.3.1/css/all.css"
+          integrity="sha384-mzrmE5qonljUremFsqc01SB46JvROS7bZs3IO2EmfFsd15uHvIt+Y8vEf7N7fWAU" crossorigin="anonymous">
+    <script src="http://code.jquery.com/jquery-1.8.3.js"></script>
+    <link th:href="@{/resources/css/background.css}" rel="stylesheet" type="text/css">
+    <link th:href="@{/resources/css/add_ticket.css}" rel="stylesheet" type="text/css">
+</head>
+<body>
+<div th:replace="~{navbar :: navbar}"></div>
+<div class="card add-ticket-form">
+    <div class="card-header">Добавить бронирование</div>
+    <div class="card-body">
+        <form class="my-0 needs-validation" th:action="@{/ticket/booking/add(ticket_id=${param.ticket_id})}" method="post"
+              id="booking-form" th:object="${booking}">
+            <div class="form-group">
+                <div class="input-group form-group">
+                    <div class="input-group-prepend">
+                        <span class="input-group-text">Имя</span>
+                    </div>
+                    <input id="name" type="text" class="form-control" name="name"
+                           placeholder="Имя" required maxlength="50" th:field="${booking.name}">
+                </div>
+                <div class="input-group form-group">
+                    <div class="input-group-prepend">
+                        <span class="input-group-text">Фамилия</span>
+                    </div>
+                    <input id="surname" type="text" class="form-control" name="surname"
+                           placeholder="Фамилия" required maxlength="50" th:field="${booking.surname}">
+                </div>
+                <div class="input-group form-group">
+                    <div class="input-group-prepend">
+                        <span class="input-group-text">Паспорт</span>
+                    </div>
+                    <input id="passport" type="text" class="form-control" name="passport"
+                           placeholder="Паспорт" required minlength="9"  maxlength="9" th:field="${booking.passport}">
+                </div>
+                <div class="input-group form-group">
+                    <div class="input-group-prepend">
+                        <span class="input-group-text">Адрес</span>
+                    </div>
+                    <input id="address" type="text" class="form-control" name="address"
+                           placeholder="Адрес" required maxlength="255" th:field="${booking.address}">
+                </div>
+                <div class="input-group form-group">
+                    <div class="input-group-prepend">
+                        <span class="input-group-text">Тип оплаты</span>
+                    </div>
+                    <select>
+                        <option>Рассрочка</option>
+                        <option>Карта банка</option>
+                    </select>
+                </div>
+            </div>
+            <div class="my-0 form-group">
+                <p style="color: red" th:if="${error}" th:text="${error}"></p>
+                <button type="submit" class="btn btn-primary">Добавить бронирование</button>
+            </div>
+        </form>
+    </div>
+</div>
+</body>
+</html>
