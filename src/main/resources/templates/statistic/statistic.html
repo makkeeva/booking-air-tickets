@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="ru" xmlns="http://www.w3.org/1999/html" xmlns:sec="http://www.w3.org/1999/xhtml">
+<head>
+	<meta charset="UTF-8">
+	<title>Статистика</title>
+	<link href="https://fonts.googleapis.com/css?family=Spartan&display=swap" rel="stylesheet">
+	<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+	      integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T"
+	      crossorigin="anonymous">
+	<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.3.1/css/all.css"
+	      integrity="sha384-mzrmE5qonljUremFsqc01SB46JvROS7bZs3IO2EmfFsd15uHvIt+Y8vEf7N7fWAU" crossorigin="anonymous">
+	<script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"
+	        integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN"
+	        crossorigin="anonymous"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"
+	        integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q"
+	        crossorigin="anonymous"></script>
+	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"
+	        integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl"
+	        crossorigin="anonymous"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.7.2/Chart.js"></script>
+	<link rel="stylesheet" href="http://cdn.datatables.net/1.10.2/css/jquery.dataTables.min.css">
+	<script type="text/javascript" src="http://cdn.datatables.net/1.10.2/js/jquery.dataTables.min.js"></script>
+	<link th:href="@{/resources/css/background.css}" rel="stylesheet" type="text/css">
+</head>
+<body>
+<div th:replace="~{navbar :: navbar}"></div>
+<div class="card form-tickets-list ml-5 mr-5 mt-3">
+	<div class="card-header">Статистика</div>
+	<div class="card-body">
+		<div class="container text-center">
+			<div class="row align-items-start">
+				<div class="col card chart-container">
+					<canvas id="ticketChart"></canvas>
+				</div>
+				<div class="col card chart-container ml-2">
+					<canvas id="userChart"></canvas>
+					</div>
+				</div>
+			</div>
+		</div>
+		<p style="color: red" th:if="${error}" th:text="${error}"></p>
+	</div>
+</div>
+</body>
+
+<script th:inline="javascript">
+    /*<![CDATA[*/
+    const userData = /*[[${userChartData.data}]]*/ 'default';
+    const userLabels = /*[[${userChartData.axisX}]]*/ 'default';
+
+    const ticketData = /*[[${ticketChartData.data}]]*/ 'default';
+    const ticketLabels = /*[[${ticketChartData.axisX}]]*/ 'default';
+
+    const canvasContextUsers = document.getElementById("userChart").getContext('2d');
+    const userChart = new Chart(canvasContextUsers, {
+        type: 'line',
+        data: {
+            labels: userLabels,
+            datasets: [{
+                label: 'График количества новых пользователей за последний год',
+                backgroundColor: 'rgba(75, 192, 192, 0.2)',
+                borderColor: 'rgba(75, 192, 192, 1)',
+                data: userData,
+            }]
+        },
+        options: {
+            scales: {
+                yAxes: [{
+                    ticks: {
+                        beginAtZero: true,
+                    }
+                }]
+            }
+        },
+    });
+
+    const canvasContextTickets = document.getElementById("ticketChart").getContext('2d');
+    const ticketChart = new Chart(canvasContextTickets, {
+        type: 'line',
+        data: {
+            labels: ticketLabels,
+            datasets: [{
+                label: 'График количества приобретённых билетов за последний год',
+                backgroundColor: 'rgba(54, 162, 235, 0.2)',
+                borderColor: 'rgba(54, 162, 235, 1)',
+                data: ticketData,
+            }]
+        },
+        options: {
+            scales: {
+                yAxes: [{
+                    ticks: {
+                        beginAtZero: true,
+                    }
+                }]
+            }
+        },
+    });
+    /*]]>*/
+</script>
+
+</html>
