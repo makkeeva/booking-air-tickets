@@ -9,6 +9,7 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import javax.persistence.*;
+import java.sql.Date;
 import java.util.Collection;
 import java.util.Set;
 
@@ -27,6 +28,9 @@ public class User implements UserDetails {
 
     @Column(name = "password", unique = true, nullable = false, length = 100)
     private String password;
+
+    @Column(name = "date", nullable = false)
+    private Date date;
 
     @Column(name = "enabled", columnDefinition = "boolean default false")
     private boolean isActive;

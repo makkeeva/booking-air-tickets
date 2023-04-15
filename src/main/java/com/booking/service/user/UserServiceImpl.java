@@ -1,10 +1,12 @@
 package com.booking.service.user;
 
+import com.booking.entity.ChartData;
 import com.booking.entity.domain.Authority;
 import com.booking.entity.domain.Profile;
 import com.booking.entity.domain.User;
 import com.booking.entity.enums.Role;
 import com.booking.exception.ExistingDataException;
+import com.booking.exception.IncorrectDataException;
 import com.booking.exception.NoSuchDataException;
 import com.booking.repository.AuthorityRepository;
 import com.booking.repository.ProfileRepository;
@@ -16,10 +18,12 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Optional;
-import java.util.Set;
+import java.sql.Date;
+import java.sql.Timestamp;
+import java.time.LocalDateTime;
+import java.time.format.TextStyle;
+import java.util.*;
+import java.util.stream.Collectors;
 
 @Service
 @Transactional
@@ -43,7 +47,7 @@ public class UserServiceImpl implements UserService {
     @Override
     public boolean changeActiveStatus(String username, boolean isActive) {
         User user = userRepository.findById(username)
-                .orElseThrow(()-> new NoSuchDataException("Данного пользователя не существует"));
+                .orElseThrow(() -> new NoSuchDataException("Данного пользователя не существует"));
         return userRepository.changeActiveStatus(user.getUsername(), isActive) == 1;
     }
 
@@ -53,9 +57,34 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    public ChartData getNumberOfUsersPerLastYear() {
+        List<User> users = userRepository.findAll();
+
+        LocalDateTime localDateTime = LocalDateTime.now();
+        users = users.stream().filter(user ->
+                        user.getDate().after(Timestamp.valueOf(localDateTime.minusYears(1))))
+                .collect(Collectors.toList());
+
+        int[] array = new int[12];
+        String[] axiosX = new String[12];
+        for (int i = 0; i < 12; i++) {
+            final int iterator = i;
+            array[i] = (int) users.stream().filter(user ->
+                    user.getDate().after(Timestamp.valueOf(localDateTime.minusYears(1).plusMonths(iterator))) &&
+                    user.getDate().before(Timestamp.valueOf(localDateTime.minusYears(1).plusMonths(iterator + 1)))
+            ).count();
+            axiosX[i] = localDateTime.minusYears(1).plusMonths(iterator).getMonth()
+                    .getDisplayName(TextStyle.FULL_STANDALONE, new Locale("ru"));
+        }
+
+        return ChartData.builder().data(array).axisX(axiosX).build();
+    }
+
+    @Override
     public boolean registerUser(Profile profile) {
         ValidationUtil.validate(profile.getUser(), userValidator);
-        if(!userRepository.existsById(profile.getUser().getUsername())){
+        if (!userRepository.existsById(profile.getUser().getUsername())) {
+            profile.getUser().setDate(new Date(System.currentTimeMillis()));
             profile.setUser(saveAllRoles(profile.getUser(), Role.USER));
             profile.getUser().setActive(true);
             profile.getUser().setPassword("{bcrypt}" + passwordEncoder.encode(profile.getUser().getPassword()));

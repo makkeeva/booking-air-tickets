@@ -1,5 +1,6 @@
 package com.booking.service.user;
 
+import com.booking.entity.ChartData;
 import com.booking.entity.domain.Authority;
 import com.booking.entity.domain.Profile;
 import com.booking.entity.domain.User;
@@ -16,4 +17,6 @@ public interface UserService {
     boolean changeActiveStatus(String username, boolean isActive);
 
     boolean registerUser(Profile profile);
+
+    ChartData getNumberOfUsersPerLastYear();
 }
