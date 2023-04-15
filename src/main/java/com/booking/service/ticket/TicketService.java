@@ -1,5 +1,6 @@
 package com.booking.service.ticket;
 
+import com.booking.entity.ChartData;
 import com.booking.entity.domain.Booking;
 import com.booking.entity.domain.Ticket;
 import com.booking.entity.domain.User;
@@ -24,4 +25,6 @@ public interface TicketService {
     void renderBookingPdf(Long bookingId);
 
     boolean removeTicket(Long id);
+
+    ChartData getNumberOfSalesPerLastYear();
 }

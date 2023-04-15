@@ -1,5 +1,6 @@
 package com.booking.service.ticket;
 
+import com.booking.entity.ChartData;
 import com.booking.entity.domain.Booking;
 import com.booking.entity.domain.Ticket;
 import com.booking.entity.domain.User;
@@ -25,7 +26,12 @@ import javax.mail.internet.MimeMessage;
 import javax.transaction.Transactional;
 import java.io.File;
 import java.io.IOException;
+import java.sql.Timestamp;
+import java.time.LocalDateTime;
+import java.time.format.TextStyle;
 import java.util.List;
+import java.util.Locale;
+import java.util.stream.Collectors;
 
 @Service
 @Transactional
@@ -46,6 +52,33 @@ public class TicketServiceImpl implements TicketService {
         if (ticketRepository.removeById(ticket.getId()) < 1)
             throw new OperationExecutionException("Билет не удалён");
         return true;
+    }
+
+    @Override
+    public ChartData getNumberOfSalesPerLastYear() {
+        List<Booking> bookings = bookingRepository.findAll();
+
+        LocalDateTime localDateTime = LocalDateTime.now();
+        bookings = bookings.stream().filter(booking ->
+                        booking.getTicket().getDepartureTime().after(Timestamp.valueOf(localDateTime.minusYears(1))))
+                .collect(Collectors.toList());
+
+        int[] array = new int[12];
+        String[] axiosX = new String[12];
+        for (int i = 0; i < 12; i++) {
+            final int iterator = i;
+            array[i] = (int) bookings.stream().filter(booking ->
+                    booking.getTicket().getDepartureTime()
+                            .after(Timestamp.valueOf(localDateTime.minusYears(1).plusMonths(iterator))) &&
+                            booking.getTicket().getDepartureTime()
+                                    .before(Timestamp.valueOf(localDateTime.minusYears(1).plusMonths(iterator + 1)))
+
+            ).count();
+            axiosX[i] = localDateTime.minusYears(1).plusMonths(iterator).getMonth()
+                    .getDisplayName(TextStyle.FULL_STANDALONE, new Locale("ru"));
+        }
+
+        return ChartData.builder().data(array).axisX(axiosX).build();
     }
 
     @Override
