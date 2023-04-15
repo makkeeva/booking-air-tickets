@@ -11,9 +11,14 @@ public interface TicketService {
     List<Ticket> findAllTickets();
     //возвращает список всех бронирований, сделанных пользователем "user".
     List<Booking> findAllBookingByUser(User user);
+    //возвращает весь список броинрований
+    List<Booking> findAllBooking();
     //добавляет новый билет в систему.
     Ticket addNewTicket(Ticket ticket);
     //добавляет новое бронирование билета "ticket_id" пользователем "user" в систему.
     Booking addNewBooking(Booking booking, User user, Long ticket_id);
+
+    void renderBookingPdf(Long bookingId);
+
     boolean removeTicket(Long id);
 }

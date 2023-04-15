@@ -19,6 +19,7 @@
             integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl"
             crossorigin="anonymous"></script>
     <link rel="stylesheet" href="http://cdn.datatables.net/1.10.2/css/jquery.dataTables.min.css">
+    <script type="text/javascript" src="http://cdn.datatables.net/1.10.2/js/jquery.dataTables.min.js"></script>
     <link th:href="@{/resources/css/background.css}" rel="stylesheet" type="text/css">
     <link th:href="@{/resources/css/nav.css}" rel="stylesheet" type="text/css">
     <link th:href="@{/resources/css/tickets_list.css}" rel="stylesheet" type="text/css">
@@ -26,9 +27,10 @@
 <body>
 <div th:replace="~{navbar :: navbar}"></div>
 <div class="card form-tickets-list">
-    <div class="card-header">Список забронированных билетов</div>
+    <div class="card-header" sec:authorize="hasAnyAuthority('ADMIN')">Список всех забронированных билетов в системе</div>
+    <div class="card-header" sec:authorize="hasAnyAuthority('USER')">Список моих забронированных билетов</div>
     <div class="card-body">
-        <table class="table table-sm" id="booking">
+        <table class="table table-sm" id="bookings">
             <thead>
             <tr>
                 <th scope="col">#</th>
@@ -42,22 +44,22 @@
             </tr>
             </thead>
             <tbody>
-            <tr th:each="item,iterStat : ${booking}">
-                <th scope="row" th:text="${iterStat.index + 1}"></th>
-                <td th:text="${item.departurePoint}"></td>
-                <td th:text="${item.arrivalPoint}"></td>
-                <td th:text="${item.cost}"></td>
-                <td th:text="${item.airline}"></td>
-                <td th:text="${item.departureTime}"></td>
-                <td th:text="${item.arrivalTime}"></td>
+            <tr th:each="item : ${booking}">
+                <th scope="row" th:text="${item.id}"></th>
+                <td th:text="${item.name}"></td>
+                <td th:text="${item.surname}"></td>
+                <td th:text="${item.passport}"></td>
+                <td th:text="${item.address}"></td>
+                <td th:text="${item.user.username}"></td>
+                <td th:text="${item.ticket.id}"></td>
                 <td>
-                    <form class="form-inline my-0 my-lg-0" th:action="@{/ticket/remove}" method="post" sec:authorize="hasAnyAuthority('ADMIN')">
+                    <form class="form-inline my-0 my-lg-0" th:action="@{/ticket/remove}" method="post" sec:authorize="hasAnyAuthority('USER')">
                         <input type="hidden" name="ticket_id" th:value="${item.id}">
                         <button type="submit" class="btn btn-outline-success btn-thin">Удалить</button>
                     </form>
-                    <form class="form-inline my-0 my-lg-0" th:action="@{/}" method="post" sec:authorize="!hasAnyAuthority('ADMIN')">
-                        <input type="hidden" name="ticket_id" th:value="${item.id}">
-                        <button type="submit" class="btn btn-outline-success btn-thin">Забронировать</button>
+                    <form class="form-inline my-0 my-lg-0" th:action="@{/ticket/booking/download}" method="get">
+                        <input type="hidden" name="booking_id" th:value="${item.id}">
+                        <button type="submit" class="btn btn-outline-success btn-thin mt-1">Напечатать</button>
                     </form>
                 </td>
             </tr>
@@ -68,7 +70,7 @@
 </body>
 <script>
     $(document).ready(function () {
-        $('#booking').dataTable();
+        $('#bookings').dataTable();
     });
 </script>
 </html>

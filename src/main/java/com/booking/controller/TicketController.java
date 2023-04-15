@@ -15,6 +15,9 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletResponse;
+import java.io.FileInputStream;
+import java.io.IOException;
 import java.sql.Timestamp;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -22,6 +25,7 @@ import java.text.SimpleDateFormat;
 @Controller
 @RequestMapping("/ticket")
 public class TicketController {
+
     @Autowired
     private TicketService ticketService;
 
@@ -101,7 +105,7 @@ public class TicketController {
     }
 
     @GetMapping("/booking/all/user")
-    public String showBookingPage(Model model) {
+    public String showBookingForCurrentUserPage(Model model) {
         try {
             User user = userService.find(SecurityContextHolder.getContext().getAuthentication().getName())
                     .orElseThrow(() -> new NoSuchDataException("Пользователь не найден"));
@@ -111,5 +115,43 @@ public class TicketController {
             return "/ticket/tickets_list";
         }
         return "booking/booking_list";
+    }
+
+    @GetMapping("/booking/all")
+    public String showBookingPage(Model model) {
+        try {
+            model.addAttribute("booking", ticketService.findAllBooking());
+        } catch (Exception e) {
+            model.addAttribute("error", e.getMessage());
+            return "/ticket/tickets_list";
+        }
+        return "booking/booking_list";
+    }
+
+    @GetMapping("/booking/download")
+    public void downloadBookingPdf(@RequestParam("booking_id") Long bookingId, HttpServletResponse response) {
+        try (FileInputStream inputStream = new FileInputStream("booking.pdf")) {
+            ticketService.renderBookingPdf(bookingId);
+            response.setContentType("application/vnd.openxmlformats-officedocument.spreadsheetml.sheet");
+            String headerKey = "Content-Disposition";
+            String headerValue = String.format("attachment; filename=\"%s\"", "booking.pdf");
+            response.setHeader(headerKey, headerValue);
+            try {
+                int c;
+                while ((c = inputStream.read()) != -1) {
+                    response.getWriter().write(c);
+                }
+            } finally {
+                if (inputStream != null)
+                    try {
+                        inputStream.close();
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                response.getWriter().close();
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 }

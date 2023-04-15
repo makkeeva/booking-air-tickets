@@ -13,7 +13,6 @@ import java.sql.Timestamp;
 @PropertySource("classpath:validation.properties")
 @Component
 public class TicketValidator implements Validator {
-    // создание env, которая будет использоваться для получения свойств, которые были объявлены в файле
     private final Environment env;
 // для получения значения из файла validation.properties.
     @Value("${length.min}")
