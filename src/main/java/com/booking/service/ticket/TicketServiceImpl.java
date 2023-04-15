@@ -10,14 +10,18 @@ import com.booking.repository.TicketRepository;
 import com.booking.utils.ValidationUtil;
 import com.booking.validation.BookingValidator;
 import com.booking.validation.TicketValidator;
+import lombok.AllArgsConstructor;
 import org.apache.pdfbox.pdmodel.PDDocument;
 import org.apache.pdfbox.pdmodel.PDPage;
 import org.apache.pdfbox.pdmodel.PDPageContentStream;
 import org.apache.pdfbox.pdmodel.font.PDFont;
 import org.apache.pdfbox.pdmodel.font.PDType0Font;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.mail.javamail.JavaMailSender;
+import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Service;
 
+import javax.mail.MessagingException;
+import javax.mail.internet.MimeMessage;
 import javax.transaction.Transactional;
 import java.io.File;
 import java.io.IOException;
@@ -25,19 +29,13 @@ import java.util.List;
 
 @Service
 @Transactional
+@AllArgsConstructor
 public class TicketServiceImpl implements TicketService {
-
-    @Autowired
     private TicketRepository ticketRepository;
-
-    @Autowired
     private BookingRepository bookingRepository;
-
-    @Autowired
     private TicketValidator ticketValidator;
-
-    @Autowired
     private BookingValidator bookingValidator;
+    public JavaMailSender emailSender;
 
     @Override
     public boolean removeTicket(Long id) {
@@ -48,6 +46,19 @@ public class TicketServiceImpl implements TicketService {
         if (ticketRepository.removeById(ticket.getId()) < 1)
             throw new OperationExecutionException("Билет не удалён");
         return true;
+    }
+
+    @Override
+    public void sendEmailBooking(Long bookingId, String email) throws MessagingException {
+        this.renderBookingPdf(bookingId);
+
+        MimeMessage mimeMessage = emailSender.createMimeMessage();
+        MimeMessageHelper messageHelper = new MimeMessageHelper(mimeMessage, true);
+        messageHelper.setTo(email);
+        messageHelper.setSubject("Броинрование билета");
+        messageHelper.setText("Вы успешно забронировали билет");
+        messageHelper.addAttachment("booking.pdf", new File("booking.pdf"));
+        emailSender.send(mimeMessage);
     }
 
     @Override

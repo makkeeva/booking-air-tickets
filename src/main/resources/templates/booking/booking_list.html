@@ -29,6 +29,7 @@
 <div class="card form-tickets-list">
     <div class="card-header" sec:authorize="hasAnyAuthority('ADMIN')">Список всех забронированных билетов в системе</div>
     <div class="card-header" sec:authorize="hasAnyAuthority('USER')">Список моих забронированных билетов</div>
+    <div class="card-header"><p style="color: red" th:if="${error}" th:text="${error}"></p></div>
     <div class="card-body">
         <table class="table table-sm" id="bookings">
             <thead>
@@ -57,20 +58,61 @@
                         <input type="hidden" name="ticket_id" th:value="${item.id}">
                         <button type="submit" class="btn btn-outline-success btn-thin">Удалить</button>
                     </form>
-                    <form class="form-inline my-0 my-lg-0" th:action="@{/ticket/booking/download}" method="get">
+                    <form class="form-inline my-0 my-lg-0 mt-1" th:action="@{/ticket/booking/download}" method="get">
                         <input type="hidden" name="booking_id" th:value="${item.id}">
                         <button type="submit" class="btn btn-outline-success btn-thin mt-1">Напечатать</button>
                     </form>
+                    <button type="button" class="btn btn-outline-success btn-thin mt-1"
+                            data-toggle="modal" data-target="#modal" th:value="${item.id}">
+                        Отправить на Email
+                    </button>
                 </td>
             </tr>
             </tbody>
         </table>
+        <div class="modal fade" id="modal" tabindex="-1" role="dialog" aria-labelledby="ModalLabel" aria-hidden="true">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="ModalLabel">Ввод Email для отправки билета</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <form class="form-inline my-0 needs-validation" th:action="@{/ticket/booking/send_email}" method="get">
+                        <div class="modal-body">
+                            <div class="form-group">
+                                <div class="input-group form-group">
+                                    <div class="input-group-prepend">
+                                        <span class="input-group-text">Введите email</span>
+                                    </div>
+                                    <input type="hidden" id="booking_id" name="booking_id">
+                                    <input id="email" type="text" class="form-control" name="email"
+                                           pattern="\b[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Z|a-z]{2,}\b"
+                                           placeholder="qwerty@mail.ru" required />
+                                </div>
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Закрыть</button>
+                            <button type="submit" class="btn btn-primary">Отправить</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
     </div>
 </div>
 </body>
 <script>
     $(document).ready(function () {
         $('#bookings').dataTable();
+    });
+
+    $("body").on('show.bs.modal', '#modal', function (event) {
+        let input = $("#modal #booking_id")[0];
+        input.setAttribute("value", event.relatedTarget.value);
+        console.log(input.getAttribute("value"));
     });
 </script>
 </html>

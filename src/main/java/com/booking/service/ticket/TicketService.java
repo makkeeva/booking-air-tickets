@@ -4,6 +4,7 @@ import com.booking.entity.domain.Booking;
 import com.booking.entity.domain.Ticket;
 import com.booking.entity.domain.User;
 
+import javax.mail.MessagingException;
 import java.util.List;
 
 public interface TicketService {
@@ -17,6 +18,8 @@ public interface TicketService {
     Ticket addNewTicket(Ticket ticket);
     //добавляет новое бронирование билета "ticket_id" пользователем "user" в систему.
     Booking addNewBooking(Booking booking, User user, Long ticket_id);
+
+    void sendEmailBooking(Long bookingId, String email) throws MessagingException;
 
     void renderBookingPdf(Long bookingId);
 

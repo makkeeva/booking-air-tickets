@@ -154,4 +154,20 @@ public class TicketController {
             e.printStackTrace();
         }
     }
+
+    @GetMapping("/booking/send_email")
+    public String sendEmailBooking(@RequestParam("booking_id") Long bookingId,
+                                 @RequestParam("email") String email, Model model) {
+        User user = userService.find(SecurityContextHolder.getContext().getAuthentication().getName())
+                .orElseThrow(() -> new NoSuchDataException("Пользователь не найден"));
+        model.addAttribute("booking", ticketService.findAllBookingByUser(user));
+        try {
+            ticketService.sendEmailBooking(bookingId, email);
+        } catch (Exception e) {
+            model.addAttribute("error", "Ошибка отправки билета на почту. Проверьте корректность Email");
+            return "booking/booking_list";
+        }
+        model.addAttribute("success", "Билет успешно отправлен на почту");
+        return "booking/booking_list";
+    }
 }
