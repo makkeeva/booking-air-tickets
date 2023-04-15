@@ -56,7 +56,7 @@
                         <input type="hidden" name="ticket_id" th:value="${item.id}">
                         <button type="submit" class="btn btn-outline-success btn-thin">Удалить</button>
                     </form>
-                    <form class="form-inline my-0 my-lg-0" th:action="@{/ticket/booking/add(ticket_id=${item.id})}" method="get" sec:authorize="hasAnyAuthority('USER')">
+                    <form class="form-inline my-0 my-lg-0" th:action="@{/ticket/booking/add}" method="get" sec:authorize="hasAnyAuthority('USER')">
                         <input type="hidden" name="ticket_id" th:value="${item.id}">
                         <button type="submit" class="btn btn-outline-success btn-thin">Забронировать</button>
                     </form>
