@@ -9,3 +9,9 @@ VALUES ('admin', '{bcrypt}$2a$10$Q4wAON25LYBgdtXQkE53v.IJYLwIycPLJ6DErsRRn20sEKF
 INSERT INTO user_authorities
 VALUES (1, 'admin'),
        (2, 'users');
+
+INSERT INTO profile
+VALUES (1, 'admin', 'Иван', 'Иванов', 'admin@gmail.com'),
+       (2, 'users', 'Гриша', 'Прешлаг', 'users@gmail.com');
+
+
