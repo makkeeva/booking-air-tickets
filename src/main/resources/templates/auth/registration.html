@@ -35,9 +35,24 @@
                 </div>
                 <div class="input-group form-group">
                     <div class="input-group-prepend">
+                        <span class="input-group-text">Имя</span>
+                    </div>
+                    <input id="name" type="text" class="form-control" name="name"
+                           placeholder="Имя" required maxlength="50" th:field="${profile.name}">
+                </div>
+                <div class="input-group form-group">
+                    <div class="input-group-prepend">
+                        <span class="input-group-text">Фамилия</span>
+                    </div>
+                    <input id="surname" type="text" class="form-control" name="surname"
+                           placeholder="Фамилия" required maxlength="50" th:field="${profile.surname}">
+                </div>
+                <div class="input-group form-group">
+                    <div class="input-group-prepend">
                         <span class="input-group-text">@</span>
                     </div>
-                    <input id="email" type="email" class="form-control" name="email" placeholder="E-mail" required
+                    <input id="email" type="email" class="form-control" name="email" placeholder="E-mail"
+                           pattern="\b[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Z|a-z]{2,}\b" required minlength="5"
                            th:field="${profile.email}">
                 </div>
             </div>
