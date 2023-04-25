@@ -53,7 +53,33 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public List<Profile> findAllProfiles() {
-        return profileRepository.findAll();
+        List<Profile> profiles = profileRepository.findAll();
+        profiles.forEach(Profile::getUser);
+        return profiles;
+    }
+
+    @Override
+    public User changeAuthData(User user, String oldPass, String newPass) {
+        if (!passwordEncoder.matches(oldPass, user.getPassword().replace("{bcrypt}", "")))
+            throw new IncorrectDataException("Старый пароль не совпадает");
+        user.setPassword(newPass);
+        ValidationUtil.validate(user, userValidator);
+        user.setPassword("{bcrypt}" + passwordEncoder.encode(newPass));
+        return userRepository.save(user);
+    }
+
+    @Override
+    public Profile editProfileData(Profile profile, User user) {
+        Profile editedProfile = profileRepository.findProfileByUser(user);
+        editedProfile.setEmail(profile.getEmail());
+        editedProfile.setName(profile.getName());
+        editedProfile.setSurname(profile.getSurname());
+        return profileRepository.save(editedProfile);
+    }
+
+    @Override
+    public Profile findProfileByUser(User user) {
+        return profileRepository.findProfileByUser(user);
     }
 
     @Override

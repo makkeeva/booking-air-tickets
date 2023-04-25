@@ -13,8 +13,11 @@ public interface UserService {
     Set<Authority> getAuthoritiesByUsername(String username);
 
     Optional<User> find(String username);
+    Profile findProfileByUser(User user);
     List<Profile> findAllProfiles();
     boolean changeActiveStatus(String username, boolean isActive);
+    Profile editProfileData(Profile profile, User user);
+    User changeAuthData(User user, String oldPass, String newPass);
 
     boolean registerUser(Profile profile);
 
