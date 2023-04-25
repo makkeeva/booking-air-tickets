@@ -30,7 +30,7 @@ dependencies {
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
 	testImplementation 'org.springframework.security:spring-security-test'
 	implementation 'org.apache.pdfbox:pdfbox:2.0.27'
-	implementation 'org.springframework.boot:spring-boot-starter-mail:2.7.3'
+	implementation 'org.springframework.boot:spring-boot-starter-mail:2.7.11'
 }
 
 tasks.named('test') {
