@@ -2,26 +2,28 @@ version: "2.4"
 
 services:
   db:
-    image: mysql:8.0.31
+    image: mysql:8.0
     container_name: db
     environment:
-      - MYSQL_USER=root
-      - MYSQL_PASSWORD=root
-      - MYSQL_DB=booking-air-tickets
+      MYSQL_DATABASE: booking-air-tickets
+      MYSQL_USER: admin
+      MYSQL_PASSWORD: admin
+      MYSQL_ROOT_PASSWORD: root
     ports:
-      - "5432:5432"
+      - "3305:3305"
     networks:
       - bridge-network
   booking:
     build: .
+    restart: always
     ports:
       - "8080:8080"
     depends_on:
       - db
     environment:
-      DATASOURCE_PASSWORD: root
+      DATASOURCE_PASSWORD: admin
       DATASOURCE_URL: jdbc:mysql://db:3306/booking-air-tickets
-      DATASOURCE_USERNAME: root
+      DATASOURCE_USERNAME: admin
     networks:
       - bridge-network
 networks:
