@@ -37,6 +37,12 @@
             <li class="nav-item" sec:authorize="hasAnyAuthority('ADMIN')">
                 <a class="btn btn-link" th:href="@{/user/all}">Пользователи</a>
             </li>
+            <li class="nav-item" sec:authorize="hasAnyAuthority('ADMIN')">
+                <a class="btn btn-link" th:href="@{/statistic}">Статистика</a>
+            </li>
+            <li class="nav-item">
+                <a class="btn btn-link" th:href="@{/user/profile}">Профиль</a>
+            </li>
         </ul>
         <form th:action="@{/logout}" method="post">
             <button type="submit" class="btn btn-primary" id="logoutBtn">Выйти из системы</button>

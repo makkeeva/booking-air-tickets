@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="ru" xmlns="http://www.w3.org/1999/html">
+<head>
+	<meta charset="UTF-8">
+	<title>Профиль</title>
+	<link href="https://fonts.googleapis.com/css?family=Spartan&display=swap" rel="stylesheet">
+	<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+	      integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T"
+	      crossorigin="anonymous">
+	<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.3.1/css/all.css"
+	      integrity="sha384-mzrmE5qonljUremFsqc01SB46JvROS7bZs3IO2EmfFsd15uHvIt+Y8vEf7N7fWAU" crossorigin="anonymous">
+	<script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"
+	        integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN"
+	        crossorigin="anonymous"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"
+	        integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q"
+	        crossorigin="anonymous"></script>
+	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"
+	        integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl"
+	        crossorigin="anonymous"></script>
+	<link rel="stylesheet" href="http://cdn.datatables.net/1.10.2/css/jquery.dataTables.min.css">
+	<script type="text/javascript" src="http://cdn.datatables.net/1.10.2/js/jquery.dataTables.min.js"></script>
+	<link th:href="@{/resources/css/background.css}" rel="stylesheet" type="text/css">
+</head>
+<body>
+<div th:replace="~{navbar :: navbar}"></div>
+<div class="card" style="width: 60%; margin: 100px auto">
+	<div class="card-header">Личная информация</div>
+	<div class="card-body">
+		<form th:action="@{/user/profile/edit}" method="post" th:object="${profile}">
+			<div class="form-group">
+				<div class="input-group form-group">
+					<div class="input-group-prepend">
+						<span class="input-group-text">Имя</span>
+					</div>
+					<input type="text" class="form-control" id="name" placeholder="Иван"
+					       required maxlength="50" minlength="2" th:field="*{name}">
+				</div>
+				<div class="input-group form-group">
+					<div class="input-group-prepend">
+						<span class="input-group-text">Фамилия</span>
+					</div>
+					<input type="text" class="form-control" id="surname" placeholder="Иванов"
+					       required maxlength="50" minlength="2" th:field="*{surname}">
+				</div>
+				<div class="input-group form-group">
+					<div class="input-group-prepend">
+						<span class="input-group-text">Email</span>
+					</div>
+					<input type="text" class="form-control" id="email" placeholder="example@acb.com"
+					       pattern="\b[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Z|a-z]{2,}\b" required minlength="5" th:field="*{email}">
+				</div>
+			</div>
+			<div class="form-group">
+				<button class="btn btn-primary profile-button" type="submit" id="edit_profile">Сохранить</button>
+				<button type="button" class="btn btn-danger edit_password" id="edit_pass" data-toggle="modal"
+				        data-target="#edit_modal">Изменить пароль</button>
+			</div>
+		</form>
+		<p style="color: red" th:if="${error}" th:text="${error}"></p>
+	</div>
+</div>
+<div class="modal fade" id="edit_modal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLongTitle"
+     aria-hidden="true">
+	<div class="modal-dialog" role="document">
+		<div class="modal-content">
+			<div class="modal-header">
+				<h5 class="modal-title" id="exampleModalLongTitle">Изменение пароля</h5>
+				<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+					<span aria-hidden="true">&times;</span>
+				</button>
+			</div>
+			<form th:action="@{/user/profile/edit_password}" method="post">
+			<div class="modal-body">
+				<div class="alert_pass"></div>
+					<div class="form-group">
+						<label for="modal_input_old_pass">Старый пароль</label>
+						<input type="text" name="oldPass" class="form-control" id="modal_input_old_pass"
+						       required minlength="5" maxlength="255">
+					</div>
+					<div class="form-group">
+						<label for="modal_input_new_pass">Новый пароль</label>
+						<input type="text" name="newPass" class="form-control" id="modal_input_new_pass"
+						       required minlength="5" maxlength="255">
+					</div>
+					<div class="form-group">
+						<label for="modal_input_repeat">Повторите пароль</label>
+						<input type="text" class="form-control" id="modal_input_repeat"
+						       required minlength="5" maxlength="255">
+					</div>
+			</div>
+			<div class="modal-footer">
+				<p style="color: red" id="alert_edit_pass"></p>
+				<button type="button" class="btn btn-secondary" data-dismiss="modal">Закрыть</button>
+				<button type="submit" class="btn btn-primary" id="modal_save">Сохранить</button>
+			</div>
+			</form>
+		</div>
+	</div>
+</div>
+</body>
+<script>
+    const password1 = document.getElementById("modal_input_new_pass")
+    const password2 = document.getElementById("modal_input_repeat")
+
+    function validatePassword(){
+        let myParagraph = document.getElementById("myParagraph");
+        if(password1.value != password2.value) {
+            password2.setCustomValidity("Пароли не совпадают")
+        } else {
+            password2.setCustomValidity('')
+        }
+    }
+
+    password1.addEventListener('change', validatePassword)
+    password2.addEventListener('change', validatePassword)
+</script>
+</html>

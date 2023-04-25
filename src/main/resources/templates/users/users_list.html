@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="ru" xmlns="http://www.w3.org/1999/html">
+<head>
+    <meta charset="UTF-8">
+    <title>Список пользователей</title>
+    <link href="https://fonts.googleapis.com/css?family=Spartan&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+          integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T"
+          crossorigin="anonymous">
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.3.1/css/all.css"
+          integrity="sha384-mzrmE5qonljUremFsqc01SB46JvROS7bZs3IO2EmfFsd15uHvIt+Y8vEf7N7fWAU" crossorigin="anonymous">
+    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"
+            integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN"
+            crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"
+            integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q"
+            crossorigin="anonymous"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"
+            integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl"
+            crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="http://cdn.datatables.net/1.10.2/css/jquery.dataTables.min.css">
+    <script type="text/javascript" src="http://cdn.datatables.net/1.10.2/js/jquery.dataTables.min.js"></script>
+    <link th:href="@{/resources/css/background.css}" rel="stylesheet" type="text/css">
+    <link th:href="@{/resources/css/nav.css}" rel="stylesheet" type="text/css">
+    <link th:href="@{/resources/css/tickets_list.css}" rel="stylesheet" type="text/css">
+</head>
+<body>
+<div th:replace="~{navbar :: navbar}"></div>
+<div class="card form-tickets-list">
+    <div class="card-header">Список пользователей</div>
+    <div class="card-body">
+        <table class="table table-sm" id="users">
+            <thead>
+            <tr>
+                <th scope="col">ID</th>
+                <th scope="col">Имя</th>
+                <th scope="col">Фамилия</th>
+                <th scope="col">Активность</th>
+                <th scope="col">Email</th>
+                <th scope="col">Действия</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="item : ${users}">
+                <th scope="row" th:text="${item.user.username}"></th>
+                <td th:text="${item.name}"></td>
+                <td th:text="${item.surname}"></td>
+                <td th:text="${item.user.active}"></td>
+                <td th:text="${item.email}"></td>
+                <td>
+                    <form class="form-inline my-0 my-lg-0" th:action="@{/user/activate}" method="post">
+                        <input type="hidden" name="username" th:value="${item.user.username}">
+                        <input type="hidden" name="is_active" th:value="${!item.user.active}">
+                        <button type="submit" class="btn btn-outline-success btn-thin" th:if="${item.user.active}">Деактивировать</button>
+                        <button type="submit" class="btn btn-outline-success btn-thin" th:if="${!item.user.active}">Активировать</button>
+                    </form>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+        <p style="color: red" th:if="${error}" th:text="${error}"></p>
+    </div>
+</div>
+</body>
+<script>
+    $(document).ready(function () {
+        $('#users').dataTable();
+    });
+</script>
+</html>
