@@ -45,8 +45,8 @@
             <tbody>
             <tr th:each="item : ${tickets}">
                 <th scope="row" th:text="${item.id}"></th>
-                <td th:text="${item.departurePoint}"></td>
                 <td th:text="${item.arrivalPoint}"></td>
+                <td th:text="${item.departurePoint}"></td>
                 <td th:text="${item.cost}"></td>
                 <td th:text="${item.airline}"></td>
                 <td th:text="${item.departureTime}"></td>
